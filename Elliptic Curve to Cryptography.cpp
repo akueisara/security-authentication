@@ -9,7 +9,6 @@
 #include <time.h>
 #include <string.h>
 
-
 using namespace std;
 
 class ecc {
@@ -251,11 +250,11 @@ void ecc::exchange_key()
 
 	srand(time(NULL));
 
-	cout<<"\n-------------------exchange key----------------\n";
-	cout<<"\n產生質數 p :\n";
+	cout<<"\n-------------------Exchange key----------------\n";
+	cout<<"\nGenerate prime p :\n";
 	count_input=0;
 	start:
-	cout<<" =>輸入key length :";
+	cout<<" =>Enter key length :";
 	strcpy(strbit,gets(buffer));
 	if (atoi(strbit)<=0 || atoi(strbit)>9 ||strlen(strbit)!=1){
 		cout<<"\n<WARNING> : 'key length must be integer between 1 to 9'\n\n";
@@ -270,21 +269,21 @@ void ecc::exchange_key()
 	p=prime(bit);
 	cout<<"\np = "<<p<<"\n";
 
-	cout<<"\n產生curve : \n";
+	cout<<"\nGenerate curve : \n";
 	do{
 		a4=rand()%p;
 		a6=rand()%p;
 	}while(mod((4*mod(mod(powl(a4,2),p)*a4,p))+(27*mod(powl(a6,2),p)),p)==0);
 	det=mod((4*mod(mod(powl(a4,2),p)*a4,p))+(27*mod(powl(a6,2),p)),p);
 	cout<<" =>a4 = "<<long(a4)<<", "<<"a6 = "<<long(a6)<<"\n";
-	cout<<" =>4*a4^3 + 27*a6^2 (mod "<<p<<")的值 = " <<long(det)<<"\n\n";
-	cout<<"橢圓曲線 :"<<" "<<"y^2 = x^3 + "<<long(a4)<<"x + "<<long(a6);
+	cout<<" =>4*a4^3 + 27*a6^2 (mod "<<p<<") = " <<long(det)<<"\n\n";
+	cout<<"Elliptic curve:"<<" "<<"y^2 = x^3 + "<<long(a4)<<"x + "<<long(a6);
 
-	cout<<"\n\n決定 random point (x,y) : \n";
+	cout<<"\n\nDecide random point (x,y) : \n";
 	random_point(p, a4, a6, bit); // 產生隨機點
-	cout<<" =>被選出的random point = ("<<long(x_random)<<","<<long(y_random)<<")";
+	cout<<" =>Generated random point = ("<<long(x_random)<<","<<long(y_random)<<")";
 
-	cout<<"\n\n產生 private key : \n";
+	cout<<"\n\nGenerate private key : \n";
 	do{
 		// private的bound value ={1,..,p-1}
 		private1=rand()%(p-1)+1;
@@ -295,7 +294,7 @@ void ecc::exchange_key()
 	cout<<"private1 = "<<private1<<"\n";
 	cout<<"private2 = "<<private2<<"\n\n";
 
-	cout<<"計算 public key : \n";
+	cout<<"Calculate public key : \n";
 	xy_Multiplypoint(p,a4,private1,x_random,y_random);
 	x_public1=x3;
 	y_public1=y3;
@@ -305,7 +304,7 @@ void ecc::exchange_key()
 	cout<<" =>public1 ="<<private1<<"*("<<long(x_random)<<","<<long(y_random)<<")=("<<long(x_public1)<<","<<long(y_public1)<<")\n";
 	cout<<" =>public2 ="<<private2<<"*("<<long(x_random)<<","<<long(y_random)<<")=("<<long(x_public2)<<","<<long(y_public2)<<")\n\n";
 
-	cout<<"計算 private key : \n";
+	cout<<"Calculate private key : \n";
 	xy_Multiplypoint(p,a4,private1,x_public2,y_public2);
 	x_key1=x3;
 	y_key1=y3;
@@ -327,7 +326,7 @@ void ecc::exchange_key()
 	second=(t.millitm/1000.0);
 	time_gen=(time_fthissh-time_start)+second;
 	cout<<endl;
-	cout<<"產生key的時間 = "<<time_gen<<" "<<"second"<<endl;
+	cout<<"The time cost of generating key = "<<time_gen<<" "<<"second"<<endl;
 }
 
 void ecc::encrypt_ECC()
@@ -345,8 +344,8 @@ void ecc::encrypt_ECC()
 
 	srand(time(NULL));
 	again1:
-	cout<<"\n\n-------------------encrypt ECC----------------\n\n";
-	cout<<"\n產生質數 p :\n";
+	cout<<"\n\n-------------------ECC Encryption----------------\n\n";
+	cout<<"\nGenerate prime p :\n";
 
 	char *datakey="key.txt";
 	long double *m_key; // 因為有些 m_key的運算會導致超過9 digit
@@ -375,7 +374,7 @@ void ecc::encrypt_ECC()
 	}
 	cout<<"\n\n";
 
-	cout<<"user1相關加密資訊:"<<"\n";
+	cout<<"user1's information of Encryption:"<<"\n";
 	cout<<" =>prime = "<<long(m_key[1])<<"\n";
 	cout<<" =>a4 = "<<long(m_key[2])<<"\n";
 	cout<<" =>a6 = "<<long(m_key[3])<<"\n";
@@ -387,7 +386,7 @@ void ecc::encrypt_ECC()
 	again: //如果沒找到file
 	strcpy(fplaintext_out,"chipertext_"); //重設fplaintext_out
 
-	cout<<"請輸入欲加密的檔案名稱或路徑 = ";
+	cout<<"Please enter the file name you want to encrypt = ";
 	buffer[0]=char(500);
 	strcpy(fplaintext_in,gets(buffer));
 
@@ -445,7 +444,7 @@ void ecc::encrypt_ECC()
 		fplaintext_outTemp[loop_take]= '\0';  // to destroy noise
 		strcpy(fplaintext_out,strcat(fplaintext_out,fplaintext_outTemp));
 	}
-	cout<<"\n加密後的檔案 = ";
+	cout<<"\nThe resulting file of encryption = ";
 	printf(fplaintext_out);
 	cout<<"\n";
 
@@ -492,12 +491,12 @@ void ecc::encrypt_ECC()
 
 	cout<<"\n\nsum character plaintext = "<<iter;
 	cout<<"\n\n";
-	cout<<"加密完成!\n";
+	cout<<"Encryption Completed!\n";
 	time_fthissh=time(NULL);//時間:加密結束
 	second=(t.millitm/1000.0);
 	time_gen=(time_fthissh-time_start)+second;
 	cout<<endl;
-	cout<<"加密花費的時間 = "<<time_gen<<" "<<"second"<<endl;
+	cout<<"The time cost of encryption = "<<time_gen<<" "<<"second"<<endl;
 
 	ifstream inFile;
 	inFile.open(fplaintext_out);
@@ -523,8 +522,8 @@ void ecc::decrypt_ECC()
 
 	srand(time(NULL));
 	again1:
-	cout<<"\n\n-------------------Schema decrypt ElGamal----------------\n\n";
-	cout<<"擷取exchange key的結果:\n";
+	cout<<"\n\n-------------------ECC Decryption----------------\n\n";
+	cout<<"The result of taking exchange key:\n";
 	char *datakey="key.txt";
 	long double *m_key; // 因為有些 m_key的運算會導致超過9 digit
 	//ofstream file_datakey;
@@ -553,7 +552,7 @@ void ecc::decrypt_ECC()
 	}
 	cout<<"\n\n";
 
-	cout<<"user2解密相關資訊:"<<"\n";
+	cout<<"user2's information of decryption:"<<"\n";
 	cout<<" =>prime = "<<long(m_key[1])<<"\n";
 	cout<<" =>a4 = "<<long(m_key[2])<<"\n";
 	cout<<" =>a6 = "<<long(m_key[3])<<"\n";
@@ -565,7 +564,7 @@ void ecc::decrypt_ECC()
 	again: //如果沒找到file
 	strcpy(fchipertext_out,"plaintext_"); //重設fchipertext_out
 
-	cout<<"請輸入欲解密的檔案名稱或路徑 = ";
+	cout<<"Please enter the file name you want to decrypt = ";
 	buffer[0]=char(500); // this is space to patch character input start from null
 	strcpy(fchipertext_in,gets(buffer));
 
@@ -624,7 +623,7 @@ void ecc::decrypt_ECC()
 		fchipertext_outTemp[loop_take]= '\0';  // to destroy noise
 		strcpy(fchipertext_out,strcat(fchipertext_out,fchipertext_outTemp));
 	}
-	cout<<"\n解密後的檔案 = ";
+	cout<<"\nThe resulting file of decryption = ";
 	printf(fchipertext_out); // animation green colour at name file result decrypt
 	cout<<"\n";
 
@@ -696,12 +695,12 @@ void ecc::decrypt_ECC()
 		}
 	}while(loop_s<=stop);
 	cout<<"!";
-	cout<<"\n\n解密完成!\n";
+	cout<<"\n\nDecryption Completed!\n";
 	time_fthissh=time(NULL);//時間:解密結束
 	second=(t.millitm/1000.0);
 	time_gen=(time_fthissh-time_start)+second;
 	cout<<endl;
-	cout<<"解密花費的時間 = "<<time_gen<<" "<<"second"<<endl;
+	cout<<"The time cost of decryption: "<<time_gen<<" "<<"second"<<endl;
 }
 
 int main ()
